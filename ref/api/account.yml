@@ -1,0 +1,75 @@
+name: AccountApi
+
+endpoints:
+  /account/details:
+    GET:
+      responses:
+        - 200
+      item: Account
+
+  /account/update:
+    PATCH:
+      responses:
+        - 200
+        - 401
+        - 422
+      item: Account
+      data:
+        type:
+          type: string
+          required: true
+          constraints:
+            - eq: users
+        attributes:
+          email:
+            type: string
+            required: true
+            constraints:
+              - email
+          username:
+            type: string
+            required: true
+
+  /account/password:
+    PATCH:
+      responses:
+        - 200
+        - 401
+        - 422
+      item: Account
+      data:
+        type:
+          type: string
+          required: true
+          constraints:
+            - eq: users
+        attributes:
+          current_password:
+            type: string
+            required: true
+          password:
+            type: string
+            required: true
+          password_confirmation:
+            type: string
+            required: true
+
+types:
+  Account:
+    terraformType: users
+    idPrefix: user
+    attributes:
+      username: string
+      isServiceAccount: bool
+      avatarUrl: string
+      v2Only: bool
+      isSiteAdmin: bool
+      isSsoLogin: bool
+      email: string
+      unconfirmedEmail: \?string
+      permissions:
+        canCreateOrganizations: bool
+        canChangeEmail: bool
+        canChangeUsername: bool
+    relationships:
+      - authentication-tokens

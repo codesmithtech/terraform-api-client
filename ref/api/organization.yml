@@ -1,0 +1,161 @@
+name: OrganizationsApi
+
+endpoints:
+  /organizations:
+    GET:
+      responses:
+        - 200
+        - 404
+      multiple: true
+      item: Organization
+
+    POST:
+      responses:
+        - 201
+        - 404
+        - 422
+      item: Organization
+      data:
+        type:
+          type: string
+          required: true
+          constraints:
+            eq: organizations
+        attributes:
+          name:
+            type: string
+            required: true
+          email:
+            type: string
+            required: true
+          sessionTimeout:
+            type: integer
+          sessionRemember:
+            type: integer
+          collaboratorAuthPolicy:
+            type: string
+            default: password
+            constraints:
+              oneOf:
+                - password
+                - two_factor_mandatory
+          costEstimationEnabled:
+            type: bool
+          ownersTeamSamlRoleId:
+            type: string
+
+  /organizations/:organizationName:
+    GET:
+      responses:
+        - 200
+        - 404
+      item: Organization
+
+    DELETE:
+      responses:
+        - 204
+        - 404
+
+    PATCH:
+      responses:
+        - 200
+        - 404
+        - 422
+      item: Organization
+      data:
+        type:
+          type: string
+          required: true
+          constraints:
+            eq: organizations
+        attributes:
+          name:
+            type: string
+            required: true
+          email:
+            type: string
+            required: true
+          sessionTimeout:
+            type: integer
+          sessionRemember:
+            type: integer
+          collaboratorAuthPolicy:
+            type: string
+            default: password
+            constraints:
+              oneOf:
+                - password
+                - two_factor_mandatory
+          costEstimationEnabled:
+            type: bool
+          ownersTeamSamlRoleId:
+            type: string
+
+  /organizations/:organizationName/entitlement-set:
+    GET:
+      responses:
+        - 200
+        - 404
+      item: EntitlementSet
+
+types:
+  Organization:
+    terraformType: organizations
+    idPrefix: ~
+    attributes:
+      name: string
+      costEstimationEnabled: bool
+      createdAt: datetime
+      email: string
+      sessionTimeout: "?integer"
+      sessionRemember: "?integer"
+      collaboratorAuthPolicy: string
+      planExpired: bool
+      planExpiresAt: datetime
+      planIsTrial: bool
+      planIsEnterprise: bool
+      permissions:
+        canUpdate: bool
+        canDestroy: bool
+        canAccessViaTeams: bool
+        canCreateModule: bool
+        canCreateTeam: bool
+        canCreateWorkspace: bool
+        canManageUsers: bool
+        canManageSubscription: bool
+        canManageSso: bool
+        canUpdateOauth: bool
+        canUpdateSentinel: bool
+        canUpdateSshKeys: bool
+        canUpdateApiToken: bool
+        canTraverse: bool
+        canStartTrial: bool
+        canUpdateAgentPools: bool
+      fairRunQueuingEnabled: bool
+      samlEnabled: bool
+      ownersTeamSamlRoleId: "?string"
+      twoFactorConformant: bool
+    relationships:
+      - oauth-tokens
+      - authentication-token
+      - subscription
+      - entitlement-set
+
+  EntitlementSet:
+    terraformType: entitlement-sets
+    idPrefix: ~
+    attributes:
+      costEstimation: bool
+      configurationDesigner: bool
+      operations: bool
+      privateModuleRegistry: bool
+      sentinel: bool
+      stateStorage: bool
+      teams: bool
+      vcsIntegrations: bool
+      usageReporting: bool
+      userLimit: bool
+      selfServeBilling: bool
+      auditLogging: bool
+      agents: bool
+      sso: bool
